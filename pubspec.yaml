@@ -24,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   cloud_firestore:
+  shared_preferences:
   font_awesome_flutter:
   firebase_core:
   firebase_auth:

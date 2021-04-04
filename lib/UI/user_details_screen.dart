@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:batua/utils/constants.dart' as constants;
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user.dart';
+
+
 import 'package:firebase_database/firebase_database.dart';
 
-import '../models/user.dart';
 class UserDetailsScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -17,30 +18,40 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final databaseRef = FirebaseDatabase.instance.reference().child("Users");
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  final FirebaseAuth auth = FirebaseAuth.instance;
-   User user ;
-
+  User user;
 
   @override
   void initState() {
     // TODO: implement initState
-    user = auth.currentUser;
+
+    user =  _auth.currentUser;
     super.initState();
   }
 
-  void addData(String name, String phone, String uid) {
+  void addData(String name , String number, String uid, String userEmail) {
+
     databaseRef.child(uid).set({
-      'displayName': name,
-      'phoneNumber':phone
+      'email': userEmail,
+      'displayName': this._nameController.text,
+      'phoneNumber':this._phoneController.text
     });
   }
+  void callFun(String name, String number) async{
+
+    addData(name, number, user.uid, user.email);
+
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
     final MediaQueryData _mediaQuery = MediaQuery.of(context);
     final double _height = _mediaQuery.size.height;
     final double _width = _mediaQuery.size.width;
+
 
     return Scaffold(
       body: ListView(
@@ -187,7 +198,10 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
               // ignore: deprecated_member_use
               child: RaisedButton(
                 onPressed: () {
-                  addData(_nameController.text, _phoneController.text, user.email);
+                  print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+                  callFun(_nameController.text, _phoneController.text);
+
                   print(_nameController.text);
                   print(_emailController.text);
                   print(_phoneController.text);

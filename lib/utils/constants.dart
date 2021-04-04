@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+bool notFirstTime = false;
 // ignore: non_constant_identifier_names
 Color primary_color = const Color(0xFFf5f6fb);
 // ignore: non_constant_identifier_names

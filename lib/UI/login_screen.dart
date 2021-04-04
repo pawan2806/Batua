@@ -1,11 +1,14 @@
 import 'package:batua/Services/authentication_service.dart';
 import 'package:batua/Services/facebook_auth.dart';
 import 'package:flutter/gestures.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../Services/google_signin.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'home_screen.dart';
 import 'sign_up.dart';
+import 'package:provider/provider.dart';
 import '../utils/constants.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
@@ -22,6 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final AuthenticationService _auth = AuthenticationService();
   final AuthService auth = new AuthService();
 
+
+
   String _email = '';
   String _password = '';
   String error = '';
@@ -35,8 +40,17 @@ class _LoginScreenState extends State<LoginScreen> {
   // ignore: non_constant_identifier_names
   Color black_heading = const Color(0xFF000000);
 
+  Future<bool> getBoolValuesSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+
+    return prefs.getBool('notFirstUser')  ;
+  }
+
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       backgroundColor: primary_color,
       body: ModalProgressHUD(
@@ -139,12 +153,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         dynamic result = await _auth.signInWithEmailAndPassword(
                             _email, _password);
                         print(result);
+
                         if (result == true) {
                           setState(() {
                             showSpinner = false;
                           });
                           Navigator.of(context).pushNamed(
-                            RouteConstants.USER_DETAIL_SCREEN,
+                            RouteConstants.HOME_SCREEN,
                           );
                           showDialog(
                               context: context,

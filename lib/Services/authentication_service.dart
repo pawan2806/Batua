@@ -1,6 +1,8 @@
+import 'package:batua/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class AuthenticationService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final databaseRef = FirebaseDatabase.instance.reference().child("Users");
@@ -10,6 +12,10 @@ class AuthenticationService {
 
   void addData(String data, String uid) {
     databaseRef.child(uid).set({'email': data});
+  }
+  Future<bool> addBoolToSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('notFirstUser', false);
   }
 
   Future<dynamic> signInWithEmailAndPassword(
@@ -37,6 +43,7 @@ class AuthenticationService {
 
       final User user = (await _auth.createUserWithEmailAndPassword(
               email: email, password: password)).user;
+      addBoolToSF();
       addData(user.email, user.uid);
 
       // Email Verification Sending
