@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:batua/utils/constants.dart' as constants;
+import 'package:firebase_auth/firebase_auth.dart';
+import '../models/user.dart';
+import 'package:firebase_database/firebase_database.dart';
 
+import '../models/user.dart';
 class UserDetailsScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -12,6 +16,25 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final databaseRef = FirebaseDatabase.instance.reference().child("Users");
+
+  final FirebaseAuth auth = FirebaseAuth.instance;
+   User user ;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    user = auth.currentUser;
+    super.initState();
+  }
+
+  void addData(String name, String phone, String uid) {
+    databaseRef.child(uid).set({
+      'displayName': name,
+      'phoneNumber':phone
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +144,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 controller: _emailController,
                 onChanged: (value) {},
                 decoration: constants.inputDecoration.copyWith(
-                  hintText: 'Email(to be autofilled and disabled)',
+                  hintText: user.email,
                 ),
               ),
             ),
@@ -164,6 +187,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
               // ignore: deprecated_member_use
               child: RaisedButton(
                 onPressed: () {
+                  addData(_nameController.text, _phoneController.text, user.email);
                   print(_nameController.text);
                   print(_emailController.text);
                   print(_phoneController.text);

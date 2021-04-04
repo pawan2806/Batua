@@ -19,6 +19,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   final AuthenticationService _auth = AuthenticationService();
+  final FirebaseAuth test = FirebaseAuth.instance;
+  void userInfo(){
+    final User user = test.currentUser;
+    print(user);
+  }
   final AuthService auth = new AuthService();
 
   int activeIndex = 0;
@@ -84,6 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
           gapLocation: GapLocation.center,
           activeIndex: activeIndex,
           onTap: (index) {
+            userInfo();
             setState(() {
               activeIndex = index;
             });

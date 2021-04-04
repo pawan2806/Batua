@@ -8,8 +8,8 @@ class AuthenticationService {
   Stream<User> get authStateChanges => _firebaseAuth.authStateChanges();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  void addData(String data) {
-    databaseRef.push().set({'email': data});
+  void addData(String data, String uid) {
+    databaseRef.child(uid).set({'email': data});
   }
 
   Future<dynamic> signInWithEmailAndPassword(
@@ -37,7 +37,7 @@ class AuthenticationService {
 
       final User user = (await _auth.createUserWithEmailAndPassword(
               email: email, password: password)).user;
-      addData(user.email);
+      addData(user.email, user.uid);
 
       // Email Verification Sending
       user.sendEmailVerification();

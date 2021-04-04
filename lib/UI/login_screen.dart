@@ -144,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             showSpinner = false;
                           });
                           Navigator.of(context).pushNamed(
-                            RouteConstants.HOME_SCREEN,
+                            RouteConstants.USER_DETAIL_SCREEN,
                           );
                           showDialog(
                               context: context,
